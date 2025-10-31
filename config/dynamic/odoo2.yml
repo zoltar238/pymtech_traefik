@@ -1,0 +1,17 @@
+http:
+  routers:
+    odoo:
+      rule: "Host(`odoo.testing2.com`)"
+      entryPoints:
+        - web  # Solo HTTP
+      service: odoo-service2
+
+  services:
+    odoo-service:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.56.33:8069"
+        healthCheck:
+          path: /web/database/selector
+          interval: 30s
+          timeout: 5s

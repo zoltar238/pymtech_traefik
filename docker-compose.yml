@@ -1,6 +1,6 @@
 services:
   traefik:
-    image: traefik:v3.4.1
+    image: traefik:latest
     container_name: traefik
     ports:
       # HTTP
@@ -8,34 +8,12 @@ services:
       # HTTPS
       - "443:443"
       # Traefik webui
-      - "8080:8080"
-    command:
-      # Docker provider configured to docker
-      - --providers.docker
-      # Allows insecure http access, intended for development only
-      - --api.insecure=true
-      # Allows access to traefik's web interface
-      - --api.dashboard=true
-      # Create an entry point named web that handles http traffic
-      - --entrypoints.web.address=:80
-      # Create an entry point to handle https traffic
-      - --entrypoints.websecure.address=:443
-      # Deactivate automatic exposure of docker containers, exposure must be specified on each container with "traefik.enable=true"
-      - --providers.docker.exposedbydefault=false
-      # Automatic ssl/tls with Let's encrypt
-      - --certificatesresolvers.myresolver.acme.tlschallenge=true
-      # Contact email for Let's encrypt
-      - --certificatesresolvers.myresolver.acme.email=admin@loxika.com
-      # Certificate storage location
-      - --certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json
-      # Logs
-      - --log.level=INFO
-      - --accesslog=true
-
+      - "8070:8080"
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - ./config/traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./config/dynamic:/etc/traefik/dynamic:ro
       - traefik-certificates:/letsencrypt
-    restart: always
+    restart: unless-stopped
     networks:
       - traefik
 
