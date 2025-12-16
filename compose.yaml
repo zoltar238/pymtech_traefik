@@ -17,6 +17,9 @@ services:
       - --api.dashboard=true
       # Create an entry point named web that handles http traffic
       - --entrypoints.web.address=:80
+      # Redirect all http traffic to https
+      - --entrypoints.web.http.redirections.entrypoint.to=websecure
+      - --entrypoints.web.http.redirections.entrypoint.scheme=https
       # Create an entry point to handle https traffic
       - --entrypoints.websecure.address=:443
       # Deactivate automatic exposure of docker containers, exposure must be specified on each container with "traefik.enable=true"
